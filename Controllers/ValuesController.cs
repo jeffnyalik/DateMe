@@ -8,7 +8,7 @@ using System.Runtime.InteropServices;
 
 namespace DatingAPI.Controllers
 {   
-    [Authorize]
+    
     [Route("api/[controller]")]
     [ApiController]
     public class ValuesController : ControllerBase
@@ -18,7 +18,8 @@ namespace DatingAPI.Controllers
         {
             this.context = context;
         }
-
+        
+        [AllowAnonymous]
         [HttpGet]
         public async Task<IEnumerable<Value>> GetValues()
         {
