@@ -13,5 +13,13 @@ namespace DatingAPI.Helpers
             response.Headers.Add("Access-Control-Expose-Headers", "Application-Error");
             response.Headers.Add("Access-Control-Allow-Origin", "*");
         }
+
+        public static int CalculateAge(this DateTime TheDateTime)
+        {
+            var age = DateTime.Today.Year - TheDateTime.Year;
+            if(TheDateTime.AddYears(age) > DateTime.Today)
+                age--;
+            return age;
+        }
     }
 }

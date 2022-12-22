@@ -4,6 +4,7 @@ using DatingAPI.Data.DataContext;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DatingAPI.Migrations
 {
     [DbContext(typeof(DateApiContext))]
-    partial class DateApiContextModelSnapshot : ModelSnapshot
+    [Migration("20221221113856_Seeds")]
+    partial class Seeds
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -29,9 +32,6 @@ namespace DatingAPI.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime>("DateAdded")
-                        .HasColumnType("datetime2");
 
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
@@ -65,9 +65,6 @@ namespace DatingAPI.Migrations
 
                     b.Property<string>("Country")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("DateOfBirth")
-                        .HasColumnType("datetime2");
 
                     b.Property<string>("Email")
                         .HasColumnType("nvarchar(max)");
@@ -126,35 +123,35 @@ namespace DatingAPI.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedAt = new DateTime(2022, 12, 22, 17, 51, 52, 43, DateTimeKind.Local).AddTicks(1377),
+                            CreatedAt = new DateTime(2022, 12, 21, 14, 38, 56, 142, DateTimeKind.Local).AddTicks(3130),
                             Name = "Value1",
                             UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
                             Id = 2,
-                            CreatedAt = new DateTime(2022, 12, 22, 17, 51, 52, 43, DateTimeKind.Local).AddTicks(1398),
+                            CreatedAt = new DateTime(2022, 12, 21, 14, 38, 56, 142, DateTimeKind.Local).AddTicks(3148),
                             Name = "Value2",
                             UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
                             Id = 3,
-                            CreatedAt = new DateTime(2022, 12, 22, 17, 51, 52, 43, DateTimeKind.Local).AddTicks(1400),
+                            CreatedAt = new DateTime(2022, 12, 21, 14, 38, 56, 142, DateTimeKind.Local).AddTicks(3264),
                             Name = "Value4",
                             UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
                             Id = 4,
-                            CreatedAt = new DateTime(2022, 12, 22, 17, 51, 52, 43, DateTimeKind.Local).AddTicks(1402),
+                            CreatedAt = new DateTime(2022, 12, 21, 14, 38, 56, 142, DateTimeKind.Local).AddTicks(3270),
                             Name = "Value5",
                             UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
                             Id = 5,
-                            CreatedAt = new DateTime(2022, 12, 22, 17, 51, 52, 43, DateTimeKind.Local).AddTicks(1403),
+                            CreatedAt = new DateTime(2022, 12, 21, 14, 38, 56, 142, DateTimeKind.Local).AddTicks(3271),
                             Name = "Value6",
                             UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         });

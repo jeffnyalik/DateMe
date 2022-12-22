@@ -9,12 +9,14 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Diagnostics;
 using DatingAPI.Helpers;
+using DatingAPI.Data.Seeder;
 
 internal class Program
 {
     private static void Main(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
+        
 
         // Add services to the container.
 
@@ -29,6 +31,9 @@ internal class Program
         builder.Services.AddSwaggerGen();
         builder.Services.AddCors();
         builder.Services.AddScoped<IAuthRepository, AuthRepository>();
+        builder.Services.AddScoped<IUserRepository, UserRepository>();
+        builder.Services.AddAutoMapper(typeof(AutoMapperProfile).Assembly);
+        
         builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
         {
             options.TokenValidationParameters = new TokenValidationParameters
@@ -65,6 +70,23 @@ internal class Program
                     }
                 });
             });
+        }
+
+        using(var scope = app.Services.CreateScope())
+        {
+            var services = scope.ServiceProvider;
+            try
+            {
+                var context = services.GetRequiredService<DateApiContext>();
+                context.Database.Migrate();
+                UserSeeder.SeedUsers(context);
+            }
+            catch(Exception ex)
+            {
+                var logger = services.GetRequiredService<ILogger<Program>>();
+                logger.LogError(ex, "An error occured during migration");
+            }
+            
         }
 
         app.UseHttpsRedirection();
