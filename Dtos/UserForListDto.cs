@@ -13,6 +13,7 @@ namespace DatingAPI.Dtos
         public string Gender {get;set;}
         public string KnownAs {get;set;}
         public DateTime LasActive {get;set;}
+        public DateTime Created {get;set;}
         public int Age {get;set;}
         public string LookingFor {get; set;}
         public string Introduction {get;set;}

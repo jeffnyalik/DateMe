@@ -32,7 +32,7 @@ internal class Program
         builder.Services.AddCors();
         builder.Services.AddScoped<IAuthRepository, AuthRepository>();
         builder.Services.AddScoped<IUserRepository, UserRepository>();
-        builder.Services.AddAutoMapper(typeof(AutoMapperProfile).Assembly);
+        builder.Services.AddAutoMapper(typeof(AutoMapperProfile));
         
         builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
         {

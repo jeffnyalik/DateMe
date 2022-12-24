@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,6 +7,7 @@ using AutoMapper;
 using DatingAPI.Data.DataContext;
 using DatingAPI.Dtos;
 using DatingAPI.Interface;
+using DatingAPI.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -42,6 +44,21 @@ namespace DatingAPI.Controllers
                 return BadRequest("User not found");
             }
             return Ok(userToreturn);
+        }
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult>UpdateUser(int id, UserForUpdateDto userForUpdateDto)
+        {
+            var userFromRepo = await repository.GetUser(id);
+            if(userFromRepo == null)
+            {
+                return Unauthorized();
+            }
+            _mapper.Map(userForUpdateDto, userFromRepo);
+            await repository.SaveAll();
+            return Ok(new {
+                message = StatusCode(201)
+            });
         }
     }
 }

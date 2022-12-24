@@ -15,18 +15,14 @@ namespace DatingAPI.Helpers
             CreateMap<User, UserForListDto>()
                 .ForMember(dest => dest.PhotoUrl, option => 
                     option.MapFrom(src => src.Photos.FirstOrDefault(p =>p.IsMain).Url)
-                )
-                .ForMember(dest => dest.Age, option => 
-                    option.MapFrom(src => src.DateOfBirth.CalculateAge())
-                );
+                ).ReverseMap();
+                
             CreateMap<User, UserForDetailsDto>()
                 .ForMember(dest => dest.PhotoUrl, option => 
                     option.MapFrom(src => src.Photos.FirstOrDefault(p =>p.IsMain).Url)
-                )
-                .ForMember(dest => dest.Age, option => 
-                    option.MapFrom(src => src.DateOfBirth.CalculateAge())
-                );
+                ).ReverseMap();
             CreateMap<Photo, PhotoForDetailsDto>().ReverseMap();
+            CreateMap<UserForUpdateDto, User>().ReverseMap();
         }
     }
 }
