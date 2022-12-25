@@ -76,7 +76,7 @@ namespace DatingAPI.Controllers
             return BadRequest("Could not add the photo");
         }
 
-        [HttpGet]
+        [HttpGet("activate route")]
         public string GetName()
         {
             string name =  "some names";
