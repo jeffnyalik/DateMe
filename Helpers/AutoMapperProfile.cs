@@ -23,6 +23,8 @@ namespace DatingAPI.Helpers
                 ).ReverseMap();
             CreateMap<Photo, PhotoForDetailsDto>().ReverseMap();
             CreateMap<UserForUpdateDto, User>().ReverseMap();
+            CreateMap<Photo, PhotoForReturnDto>();
+            CreateMap<PhotoCreatingDto, Photo>();
         }
     }
 }

@@ -17,7 +17,7 @@ namespace DatingAPI.Controllers
 {   
     [Authorize]
     [ApiController]
-    [Route("api/users/{userId}[controller]")]
+    [Route("api/users/{userId}/[controller]")]
     public class PhotosController : ControllerBase
     {   
         private readonly IUserRepository repo;
@@ -44,8 +44,20 @@ namespace DatingAPI.Controllers
             cloudinary = new Cloudinary(acc);
         }
 
+        [HttpGet("{id}", Name = "GetPhoto")]
+        public async Task<IActionResult>GetPhoto(int id)
+        {
+            var fromRepo = await repo.GetPhoto(id);
+            if(fromRepo == null)
+            {
+                return NotFound();
+            }
+            var photo = mapper.Map<PhotoForReturnDto>(fromRepo);
+            return Ok(photo);
+        }
+
         [HttpPost]
-        public async Task<IActionResult>AddPhotoForUser(int userId, PhotoCreatingDto photoCreatingDto)
+        public async Task<IActionResult>AddPhotoForUser(int userId, [FromForm] PhotoCreatingDto photoCreatingDto)
         {
             var userRepo = await repo.GetUser(userId);
             if(userRepo == null){
@@ -70,17 +82,11 @@ namespace DatingAPI.Controllers
             if(!userRepo.Photos.Any(u => u.IsMain)){photo.IsMain = true;}
             userRepo.Photos.Add(photo);
             if(await repo.SaveAll())
-            {
-                return Ok();
+            {   
+                var photoToReturn = mapper.Map<PhotoForReturnDto>(photo);
+                return CreatedAtAction("GetPhoto", new {id = photo.Id}, photoToReturn);
             }
             return BadRequest("Could not add the photo");
-        }
-
-        [HttpGet("activate route")]
-        public string GetName()
-        {
-            string name =  "some names";
-            return name;
         }
     }
 }

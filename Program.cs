@@ -27,6 +27,7 @@ internal class Program
             options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
         });
         // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+        builder.Services.AddMvc(options => options.EnableEndpointRouting = false);
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
         builder.Services.AddCors();
@@ -89,12 +90,16 @@ internal class Program
             }
             
         }
-
+        
+        app.UseRouting();
         app.UseHttpsRedirection();
         app.UseCors(x => x.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
         app.UseAuthentication();
         app.UseAuthorization();
-        app.MapControllers();
+        app.UseMvc(routers =>{
+            routers.MapRoute(name: "default", template: "{controller=Home}/{action=Index}/{id?}");
+        });
+        // app.MapControllers();
 
         app.Run();
     }
