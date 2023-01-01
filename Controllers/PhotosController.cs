@@ -88,5 +88,36 @@ namespace DatingAPI.Controllers
             }
             return BadRequest("Could not add the photo");
         }
+
+        [HttpPost("{id}/setMain")]
+        public async Task<IActionResult>SetMainPhoto(int UserId, int id)
+        {
+            var userFromRepo = await repo.GetUser(UserId);
+            if(userFromRepo == null)
+            {
+                return Unauthorized();
+            }
+
+            if(!userFromRepo.Photos.Any(p => p.Id == id))
+            {
+                return Unauthorized();
+            }
+            var photoFromRepo = await repo.GetPhoto(id);
+            if(photoFromRepo.IsMain)
+            {
+                return BadRequest("This is already the main Photo");
+            }
+
+            var CurrentMainPhoto = await repo.GetMainPhotoForUser(UserId);
+            CurrentMainPhoto.IsMain = false;
+            photoFromRepo.IsMain = true;
+            if(await repo.SaveAll())
+            {
+                return NoContent();
+            }
+
+            return BadRequest("Could not set photo to main");
+            
+        }
     }
 }
