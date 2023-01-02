@@ -35,12 +35,12 @@ namespace DatingAPI.Repository
 
         public User GetByEmail(string email)
         {
-            return context.Users.FirstOrDefault(x =>x.Email == email);
+            return context.Users.Include(p =>p.Photos).FirstOrDefault(x =>x.Email == email);
         }
 
         public async Task<bool> UserExists(string username)
         {
-            if(await context.Users.AnyAsync(x =>x.UserName == username))
+            if(await context.Users.Include(p =>p.Photos).AnyAsync(x =>x.UserName == username))
             {
                 return true;
             }

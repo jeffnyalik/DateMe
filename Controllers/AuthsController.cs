@@ -11,6 +11,7 @@ using DatingAPI.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
+using AutoMapper;
 
 namespace DatingAPI.Controllers
 {
@@ -20,9 +21,11 @@ namespace DatingAPI.Controllers
     {   
         private readonly IAuthRepository authRepo;
         private readonly IConfiguration _configuration;
-        public AuthsController(IAuthRepository authRepo, IConfiguration configuration)
+        private readonly IMapper mapper;
+        public AuthsController(IAuthRepository authRepo, IConfiguration configuration, IMapper mapper)
         {
             this.authRepo = authRepo;
+            this.mapper = mapper;
             _configuration = configuration;
         }
 
@@ -56,35 +59,55 @@ namespace DatingAPI.Controllers
         [HttpPost("user-login")]
         public IActionResult UserLogin([FromBody]FromUserLoginDto fromUserLoginDto)
         {
-            var user = authRepo.GetByEmail(fromUserLoginDto.Email.ToLower());
-            if(user == null) return BadRequest(new {message = "Invalid credentials"});
-            if(!BCrypt.Net.BCrypt.Verify(fromUserLoginDto.Password, user.Password))
+            var usr = authRepo.GetByEmail(fromUserLoginDto.Email.ToLower());
+            if(usr == null) return BadRequest(new {message = "Invalid credentials"});
+            if(!BCrypt.Net.BCrypt.Verify(fromUserLoginDto.Password, usr.Password))
             {
                 return BadRequest(new {message = "Invalid credentials"});
             }
             
-            var res = GenerateUserJwtToken(user);
-            return Ok(new { token = res} );
             
-        }
-
-
-        private string GenerateUserJwtToken(User user)
-        {
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.ASCII.GetBytes(_configuration.GetSection("AppSettings:Secret").Value);
             var tokenDescriptor = new SecurityTokenDescriptor
             {
-                Subject = new ClaimsIdentity(new[] { new Claim("id", user.Id.ToString()), 
-                    new Claim(ClaimTypes.Email, user.Email),
-                    new Claim(ClaimTypes.Name, user.UserName)
+                Subject = new ClaimsIdentity(new[] { new Claim("id", usr.Id.ToString()), 
+                    new Claim(ClaimTypes.Email, usr.Email),
+                    new Claim(ClaimTypes.Name, usr.UserName)
                  }),
                 Expires = DateTime.UtcNow.AddDays(7),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
             };
+            
             var token = tokenHandler.CreateToken(tokenDescriptor);
-            return tokenHandler.WriteToken(token);
+            var user = mapper.Map<UserForListDto>(usr);
+            return Ok(new {
+                token = tokenHandler.WriteToken(token),
+                user
+            });
+            // var res = GenerateUserJwtToken(user);
+            // return Ok(new { token = res} );
+            
         }
+
+
+        // private string GenerateUserJwtToken(User user)
+        // {
+        //     var tokenHandler = new JwtSecurityTokenHandler();
+        //     var key = Encoding.ASCII.GetBytes(_configuration.GetSection("AppSettings:Secret").Value);
+        //     var tokenDescriptor = new SecurityTokenDescriptor
+        //     {
+        //         Subject = new ClaimsIdentity(new[] { new Claim("id", user.Id.ToString()), 
+        //             new Claim(ClaimTypes.Email, user.Email),
+        //             new Claim(ClaimTypes.Name, user.UserName)
+        //          }),
+        //         Expires = DateTime.UtcNow.AddDays(7),
+        //         SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
+        //     };
+            
+        //     var token = tokenHandler.CreateToken(tokenDescriptor);
+        //     return tokenHandler.WriteToken(token);
+        // }
 
       
     }
