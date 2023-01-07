@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace DatingAPI.Models
 {
-    public class User
+    public class User : BaseModel
     {
         public int Id {get; set;}
         public string UserName {get;set;}
@@ -14,8 +14,8 @@ namespace DatingAPI.Models
         public string Password {get;set;}
         public string Gender {get;set;}
         public string KnownAs {get;set;}
-        public DateTime LasActive {get;set;}
-        public DateTime DateOfBirth {get;set;}
+        public DateTime LasActive {get;set;} = DateTime.Now;
+        public DateTime DateOfBirth {get;set;} = DateTime.Now;
         public string LookingFor {get; set;}
         public string Introduction {get;set;}
         public string Interests {get;set;}

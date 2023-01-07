@@ -47,13 +47,23 @@ namespace DatingAPI.Controllers
             {
                 UserName = userRegisterDto.UserName,
                 Email = userRegisterDto.Email,
-                Password = BCrypt.Net.BCrypt.HashPassword(userRegisterDto.Password)
+                Gender = userRegisterDto.Gender,
+                KnownAs = userRegisterDto.KnownAs,
+                DateOfBirth = userRegisterDto.DateOfBirth,
+                Country = userRegisterDto.Country,
+                City = userRegisterDto.City,
+                Password = BCrypt.Net.BCrypt.HashPassword(userRegisterDto.Password),
             };
             
             var res  = authRepo.Create(user);
             return Ok(new {
-                message = res.Email, res.UserName
+                message = res.Email, 
+                        res.UserName,
+                        res.Gender,
+                        res.KnownAs, res.Country, res.City,
+                        res.LasActive, res.DateOfBirth
             });
+
         }
 
         [HttpPost("user-login")]
